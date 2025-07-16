@@ -1,0 +1,101 @@
+services:
+  audiobookshelf:
+    image: ghcr.io/advplyr/audiobookshelf:latest
+    ports:
+      - 13378:80
+    volumes:
+      - ${MAIN_DIR}/media/library:/audiobooks
+      - ${MAIN_DIR}/media/podcasts:/podcasts
+      - ${MAIN_DIR}/media/audiobookshelf/config:/config
+      - ${MAIN_DIR}/media/audiobookshelf/metadata:/metadata
+    environment:
+      - TZ=Asia/Kolkata
+
+  gitea:
+    image: gitea/gitea:latest
+    container_name: gitea
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      - TZ=Asia/Kolkata
+    restart: always
+    ports:
+      - 3000:3000
+      - 222:22
+    volumes:
+      - ${MAIN_DIR}/gitea/data:/data
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+      - WEBUI_PORT=8080
+    volumes:
+      - ${MAIN_DIR}/qbittorrent/config:/config
+      - ${MAIN_DIR}/media/downloads:/downloads
+    ports:
+      - 8080:8080
+      - 6881:6881
+      - 6881:6881/udp
+    restart: unless-stopped
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - ${MAIN_DIR}/radarr-sonarr-stack/config/sonarr:/config
+      - ${MAIN_DIR}/media/library:/library
+      - ${MAIN_DIR}/media/downloads:/downloads
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - ${MAIN_DIR}/radarr-sonarr-stack/config/radarr:/config
+      - ${MAIN_DIR}/media/library:/library
+      - ${MAIN_DIR}/media/downloads:/downloads
+    ports:
+      - 7878:7878
+    restart: unless-stopped
+
+  whisparr:
+    image: lscr.io/linuxserver/whisparr:latest
+    container_name: whisparr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - ${MAIN_DIR}/radarr-sonarr-stack/config/whisparr:/config
+      - ${MAIN_DIR}/media/library:/library
+      - ${MAIN_DIR}/media/downloads:/downloads
+    ports:
+      - 6969:6969
+    restart: unless-stopped
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - ${MAIN_DIR}/radarr-sonarr-stack/config/prowlarr:/config
+    ports:
+      - 9696:9696
+    restart: unless-stopped
