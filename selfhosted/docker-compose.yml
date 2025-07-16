@@ -31,6 +31,8 @@ services:
       - 222:22
     volumes:
       - ${MAIN_DIR}/gitea/data:/data
+
+
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
