@@ -1,4 +1,11 @@
 services:
+
+#     _____            .___.__         __________               __       _________.__           .__   _____ 
+#    /  _  \  __ __  __| _/|__| ____   \______   \ ____   ____ |  | __  /   _____/|  |__   ____ |  |_/ ____\
+#   /  /_\  \|  |  \/ __ | |  |/  _ \   |    |  _//  _ \ /  _ \|  |/ /  \_____  \ |  |  \_/ __ \|  |\   __\ 
+#  /    |    \  |  / /_/ | |  (  <_> )  |    |   (  <_> |  <_> )    <   /        \|   Y  \  ___/|  |_|  |   
+#  \____|__  /____/\____ | |__|\____/   |______  /\____/ \____/|__|_ \ /_______  /|___|  /\___  >____/__|   
+#          \/           \/                     \/                   \/         \/      \/     \/            
   audiobookshelf:
     image: ghcr.io/advplyr/audiobookshelf:latest
     ports:
@@ -24,23 +31,24 @@ services:
       - 222:22
     volumes:
       - ${MAIN_DIR}/gitea/data:/data
-
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=Asia/Kolkata
+      - TZ=Etc/UTC
       - WEBUI_PORT=8080
+      - TORRENTING_PORT=6881
     volumes:
-      - ${MAIN_DIR}/qbittorrent/config:/config
-      - ${MAIN_DIR}/media/downloads:/downloads
+      - ${MAIN_DIR}/qbittorrent/appdata:/config
+      - ${MAIN_DIR}/downloads:/downloads #optional
     ports:
       - 8080:8080
       - 6881:6881
       - 6881:6881/udp
     restart: unless-stopped
+
 
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
@@ -73,7 +81,7 @@ services:
     restart: unless-stopped
 
   whisparr:
-    image: lscr.io/linuxserver/whisparr:latest
+    image: ghcr.io/thespad/whisparr:latest
     container_name: whisparr
     environment:
       - PUID=1000
@@ -81,7 +89,6 @@ services:
       - TZ=Asia/Kolkata
     volumes:
       - ${MAIN_DIR}/radarr-sonarr-stack/config/whisparr:/config
-      - ${MAIN_DIR}/media/library:/library
       - ${MAIN_DIR}/media/downloads:/downloads
     ports:
       - 6969:6969
