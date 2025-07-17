@@ -1,0 +1,43 @@
+# _   _ _______  ___   _ ____  
+#| \ | | ____\ \/ / | | / ___| 
+#|  \| |  _|  \  /| | | \___ \ 
+#| |\  | |___ /  \| |_| |___) |
+#|_| \_|_____/_/\_\\___/|____/ 
+#                              
+
+
+
+###########################################################################################
+
+
+
+
+#       ____  _ _   _                            _   
+#  __ _| __ )(_) |_| |_ ___  _ __ _ __ ___ _ __ | |_ 
+# / _` |  _ \| | __| __/ _ \| '__| '__/ _ \ '_ \| __|
+#| (_| | |_) | | |_| || (_) | |  | | |  __/ | | | |_ 
+# \__, |____/|_|\__|\__\___/|_|  |_|  \___|_| |_|\__|
+#    |_|                                             
+
+
+---
+services:
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - WEBUI_PORT=6901
+      - TORRENTING_PORT=6881
+    volumes:
+      - ${PWD}/qbittorrent/config:/config
+      - ${PWD}/qbittorrent/downloads:/downloads #optional
+    ports:
+      - 6901:6901
+      - 6881:6881
+      - 6881:6881/udp
+    restart: unless-stopped
+
+
