@@ -124,17 +124,36 @@ services:
 # |_| |_|\___/|_| |_|
 #                    
 
+        #n8n:
+        #  image: docker.n8n.io/n8nio/n8n:latest
+        #  container_name: n8n
+        #  restart: always
+        #  ports:
+        #    - "6905:5678"
+        #  environment:
+        #    - N8N_BASIC_AUTH_ACTIVE=true
+        #    - N8N_BASIC_AUTH_USER=admin
+        #    - N8N_BASIC_AUTH_PASSWORD=password
+        #  volumes:
+        #    - ${PWD}/n8n/data:/home/node/.n8n:rw
+
   n8n:
-    image: docker.n8n.io/n8nio/n8n:latest
+    #image: docker.n8n.io/n8nio/n8n
+    
+    #image: docker.n8nio/n8n:1.101.3
+    #image: docker.n8n.io/n8nio/n8n:next
+    #image: n8nio/n8n:nightly-arm64
+    #image: n8nio/n8n:1.102.4-arm64
+    image: n8nio/n8n:1.101.3-arm64
+
     container_name: n8n
     restart: always
     ports:
-      - "6905:5678"
+      - 6905:5678
     environment:
-      - N8N_BASIC_AUTH_ACTIVE=true
-      - N8N_BASIC_AUTH_USER=admin
-      - N8N_BASIC_AUTH_PASSWORD=securepassword
-      - N8N_HOST=0.0.0.0
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - WEBHOOK_URL=http://localhost/
     volumes:
       - ${PWD}/n8n/data:/home/node/.n8n
 
