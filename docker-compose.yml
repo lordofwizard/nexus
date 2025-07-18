@@ -230,3 +230,34 @@ services:
       - ${PWD}/whisparr/config:/config
       - ${PWD}/whisparr/data:/data
 
+
+###################################################################################################
+
+# __     __          _ _ __        __            _            
+# \ \   / /_ _ _   _| | |\ \      / /_ _ _ __ __| | ___ _ __  
+#  \ \ / / _` | | | | | __\ \ /\ / / _` | '__/ _` |/ _ \ '_ \ 
+#   \ V / (_| | |_| | | |_ \ V  V / (_| | | | (_| |  __/ | | |
+#    \_/ \__,_|\__,_|_|\__| \_/\_/ \__,_|_|  \__,_|\___|_| |_|
+#                                                             
+
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+    ports:
+     - 6910:80 #map any custom port to use (replace 9445 not 80)
+    volumes:
+     - ${PWD}/bitwarden:/data:rw
+#    environment:
+#     - ROCKET_TLS={certs="/ssl/certs/certs.pem",key="/ssl/private/key.pem"}  // Environment variable is specific to the Rocket web server
+#     - ADMIN_TOKEN=${ADMIN_TOKEN}
+#     - WEBSOCKET_ENABLED=true
+#     - SIGNUPS_ALLOWED=false
+#     - SMTP_HOST=${SMTP_HOST}
+#     - SMTP_FROM=${SMTP_FROM}
+#     - SMTP_PORT=${SMTP_PORT}
+#     - SMTP_SECURITY=${SMTP_SECURITY}
+#     - SMTP_TIMEOUT=${SMTP_TIMEOUT}
+#     - SMTP_USERNAME=${SMTP_USERNAME}
+#     - SMTP_PASSWORD=${SMTP_PASSWORD}
+
