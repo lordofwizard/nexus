@@ -124,28 +124,8 @@ services:
 # |_| |_|\___/|_| |_|
 #                    
 
-        #n8n:
-        #  image: docker.n8n.io/n8nio/n8n:latest
-        #  container_name: n8n
-        #  restart: always
-        #  ports:
-        #    - "6905:5678"
-        #  environment:
-        #    - N8N_BASIC_AUTH_ACTIVE=true
-        #    - N8N_BASIC_AUTH_USER=admin
-        #    - N8N_BASIC_AUTH_PASSWORD=password
-        #  volumes:
-        #    - ${PWD}/n8n/data:/home/node/.n8n:rw
-
   n8n:
-    #image: docker.n8n.io/n8nio/n8n
-    
-    #image: docker.n8nio/n8n:1.101.3
-    #image: docker.n8n.io/n8nio/n8n:next
-    #image: n8nio/n8n:nightly-arm64
-    #image: n8nio/n8n:1.102.4-arm64
     image: n8nio/n8n:1.101.3-arm64
-
     container_name: n8n
     restart: always
     ports:
@@ -267,16 +247,3 @@ services:
      - 6910:80 #map any custom port to use (replace 9445 not 80)
     volumes:
      - ${PWD}/bitwarden:/data:rw
-#    environment:
-#     - ROCKET_TLS={certs="/ssl/certs/certs.pem",key="/ssl/private/key.pem"}  // Environment variable is specific to the Rocket web server
-#     - ADMIN_TOKEN=${ADMIN_TOKEN}
-#     - WEBSOCKET_ENABLED=true
-#     - SIGNUPS_ALLOWED=false
-#     - SMTP_HOST=${SMTP_HOST}
-#     - SMTP_FROM=${SMTP_FROM}
-#     - SMTP_PORT=${SMTP_PORT}
-#     - SMTP_SECURITY=${SMTP_SECURITY}
-#     - SMTP_TIMEOUT=${SMTP_TIMEOUT}
-#     - SMTP_USERNAME=${SMTP_USERNAME}
-#     - SMTP_PASSWORD=${SMTP_PASSWORD}
-
