@@ -1,0 +1,12 @@
+FROM ghcr.io/advplyr/audiobookshelf:latest
+
+# Create the directory if it doesn't exist
+RUN mkdir -p /etc/ssl/certs
+
+# We'll mount the cert during build
+ARG CA_CERT_CONTENT
+RUN if [ -n "$CA_CERT_CONTENT" ]; then echo "$CA_CERT_CONTENT" > /etc/ssl/certs/ca-certificates.crt; fi
+
+# Set environment variables
+ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
+ENV NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt

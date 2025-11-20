@@ -15,6 +15,7 @@
 # \__, |____/|_|\__|\__\___/|_|  |_|  \___|_| |_|\__|
 #    |_|                                             
 
+
 ---
 services:
   qbittorrent:
@@ -28,7 +29,8 @@ services:
       - TORRENTING_PORT=6881
     volumes:
       - ${PWD}/qbittorrent/config:/config
-      - ${PWD}/qbittorrent/downloads:/downloads #optional
+        #- ${PWD}/qbittorrent/downloads:/downloads #optional
+      - /home/ubuntu/Downloads/qbit:/downloads
     ports:
       - 6901:6901
       - 6881:6881
@@ -44,23 +46,23 @@ services:
 # \___|_|  \__,_|_|  \__|\__, |
 #                        |___/ 
 
-  crafty:
-    container_name: crafty_container
-    image: registry.gitlab.com/crafty-controller/crafty-4:latest
-    restart: always
-    environment:
-      - TZ=Etc/UTC
-    ports:
-      - "6902:8443"               # HTTPS
-      - "8123:8123"               # DYNMAP
-      - "19132:19132/udp"        # BEDROCK
-      - "25500-25600:25500-25600" # MC SERV PORT RANGE
-    volumes:
-      - ${PWD}/crafty/backups:/crafty/backups
-      - ${PWD}/crafty/logs:/crafty/logs
-      - ${PWD}/crafty/servers:/crafty/servers
-      - ${PWD}/crafty/config:/crafty/app/config
-      - ${PWD}/crafty/import:/crafty/import
+      #  crafty:
+      #    container_name: crafty_container
+      #    image: registry.gitlab.com/crafty-controller/crafty-4:latest
+      #    restart: always
+      #    environment:
+      #      - TZ=Etc/UTC
+      #    ports:
+      #      - "6902:8443"               # HTTPS
+      #      - "8123:8123"               # DYNMAP
+      #      - "19132:19132/udp"        # BEDROCK
+      #      - "25500-25600:25500-25600" # MC SERV PORT RANGE
+      #    volumes:
+      #      - ${PWD}/crafty/backups:/crafty/backups
+      #      - ${PWD}/crafty/logs:/crafty/logs
+      #      - ${PWD}/crafty/servers:/crafty/servers
+      #      - ${PWD}/crafty/config:/crafty/app/config
+      #      - ${PWD}/crafty/import:/crafty/import
 
 ###################################################################################################
 
@@ -72,17 +74,19 @@ services:
 #/_/   \_\__,_|\__,_|_|\___/|____/ \___/ \___/|_|\_\|____/|_| |_|\___|_|_|  
 #                                                                          
 
+
   audiobookshelf:
     image: ghcr.io/advplyr/audiobookshelf:latest
     ports:
       - 6903:80
     volumes:
-      - ${PWD}/audiobookshelf/audiobooks:/audiobooks
       - ${PWD}/audiobookshelf/podcasts:/podcasts
       - ${PWD}/audiobookshelf/config:/config
       - ${PWD}/audiobookshelf/metadata:/metadata
+      - /home/ubuntu/Downloads/ablib:/audiobooks_extra
     environment:
       - TZ=Asia/Kolkata
+
 
 ###################################################################################################
 
@@ -247,3 +251,14 @@ services:
      - 6910:80 #map any custom port to use (replace 9445 not 80)
     volumes:
      - ${PWD}/bitwarden:/data:rw
+
+
+  actual:
+    image: actualbudget/actual-server:latest
+    container_name: actual-budget
+    restart: unless-stopped
+    ports:
+      - "6911:5006"
+    volumes:
+      - ${PWD}/actual:/data
+
