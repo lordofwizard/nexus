@@ -262,3 +262,105 @@ services:
     volumes:
       - ${PWD}/actual:/data
 
+
+  navidrome:
+    image: deluan/navidrome:latest
+    container_name: navidrome
+    user: "1000:1000"
+    ports:
+      - "6916:4533"
+    environment:
+      - ND_SCANSCHEDULE=1h
+      - ND_LOGLEVEL=info
+      - ND_SESSIONTIMEOUT=24h
+      - TZ=Asia/Kolkata
+      - ND_BASEURL=https://music.lordofwizard.com
+
+    volumes:
+      - ${PWD}/navidrome/data:/data
+      - /home/ubuntu/Downloads/music:/music:ro
+    restart: unless-stopped
+  ###################################################################################################
+  
+  # Nicotine+ (Soulseek) — proper web UI version
+  nicotine:
+    image: sirjmann92/nicotineplus-proper:latest
+    container_name: nicotine
+    ports:
+      - "6917:6565"
+      - "2234:2234/tcp"
+      - "2234:2234/udp"
+    environment:
+      - TZ=Asia/Kolkata
+      - PUID=1000
+      - PGID=1000
+      - AUTO_CONNECT=True
+      - UPNP=False
+    env_file:
+      - ${PWD}/nicotine/.env
+    volumes:
+      - /home/ubuntu/Downloads/music:/downloads
+      - /home/ubuntu/Downloads/music:/shared
+      - ${PWD}/nicotine/config:/config
+      - ${PWD}/nicotine/data:/data
+    restart: unless-stopped
+
+
+###################################################################################################
+
+#  ______ _           _  __ _       ___ ___ ___
+# |  ____(_)         | |/ _| |     |_ _|_ _|_ _|
+# | |__   _ _ __ ___ | | |_| |_ ___  | | | | | |
+# |  __| | | '__/ _ \| |  _| __/ _ \ | | | | | |
+# | |    | | | | (_) | | | | ||  __/ | | | | | |
+# |_|    |_|_|  \___/|_|_|  \__\___||___|___|___|
+#
+
+  firefly-iii:
+    image: fireflyiii/core:latest
+    container_name: firefly-iii
+    restart: unless-stopped
+    ports:
+      - "6918:8080"
+    environment:
+      - APP_KEY=base64:erWk54bmHsHh7sKemolJG2+WyuVv51/H5s0PWj7MSas=
+      - DB_CONNECTION=mysql
+      - DB_HOST=firefly-db
+      - DB_PORT=3306
+      - DB_DATABASE=firefly
+      - DB_USERNAME=firefly
+      - DB_PASSWORD=fireflypassword
+      - TRUSTED_PROXIES=**
+      - APP_ENV=local
+      - APP_DEBUG=false
+      - TZ=Asia/Kolkata
+    volumes:
+      - ${PWD}/firefly/upload:/var/www/html/storage/upload
+    depends_on:
+      - firefly-db
+
+  firefly-db:
+    image: mariadb:10.11
+    container_name: firefly-db
+    restart: unless-stopped
+    environment:
+      - MYSQL_DATABASE=firefly
+      - MYSQL_USER=firefly
+      - MYSQL_PASSWORD=fireflypassword
+      - MYSQL_ROOT_PASSWORD=rootpassword
+    volumes:
+      - ${PWD}/firefly/db:/var/lib/mysql
+
+  firefly-importer:
+    image: fireflyiii/data-importer:latest
+    container_name: firefly-importer
+    restart: unless-stopped
+    ports:
+      - "6919:8080"
+    environment:
+      - FIREFLY_III_URL=http://firefly-iii:8080
+      - FIREFLY_III_ACCESS_TOKEN=
+      - TZ=Asia/Kolkata
+    depends_on:
+      - firefly-iii
+
